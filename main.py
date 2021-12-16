@@ -44,7 +44,7 @@ def main():
         cv2.waitKey(10)
         i += 1
 
-    print("################################################################################################")
+    print("############################################## AFTER INTERPOLATION ##################################################")
     for j, landmark in enumerate(inter):
         if not landmark.list and j+1 < len(inter):
             prev_lm = inter[j-1]
