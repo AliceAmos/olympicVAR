@@ -1,3 +1,4 @@
+import pandas as pd
 from tensorflow.keras.models import load_model
 from collections import deque
 import numpy as np
@@ -19,13 +20,14 @@ import cv2
 # 	help="size of queue for averaging")
 # args = vars(ap.parse_args())
 
-def predict():
+
+def predict(new_vid_path):
 
 	print("[INFO] loading model and label binarizer...")
 	# model = load_model(args["model"])
-	model = load_model('model/extended.model')
+	model = load_model('/Users/I555250/PycharmProjects/olympicVAR/model/extended.model')
 	# lb = pickle.loads(open(args["label_bin"], "rb").read())
-	lb = pickle.loads(open('model/lb.pickle', "rb").read())
+	lb = pickle.loads(open('/Users/I555250/PycharmProjects/olympicVAR/model/lb.pickle', "rb").read())
 	# initialize the image mean for mean subtraction along with the
 	# predictions queue
 	mean = np.array([123.68, 116.779, 103.939][::1], dtype="float32")
@@ -33,9 +35,10 @@ def predict():
 
 
 	# vs = cv2.VideoCapture(args["input"])
-	vs = cv2.VideoCapture('new_vid_91.mp4')
+	vs = cv2.VideoCapture(new_vid_path)
 	writer = None
 	(W, H) = (None, None)
+	frames_scores = list()
 	# loop over frames from the video file stream
 	while True:
 		# read the next frame from the file
@@ -59,6 +62,7 @@ def predict():
 		# previous predictions
 		results = np.array(Q).mean(axis=0)
 		i = np.argmax(results)
+		frames_scores.append(i)
 		label = lb.classes_[i]
 
 		text = "score: {}".format(label)
@@ -68,16 +72,18 @@ def predict():
 			# initialize our video writer
 			fourcc = cv2.VideoWriter_fourcc(*"MJPG")
 			# writer = cv2.VideoWriter(args["output"], fourcc, 30, (W, H), True)
-			writer = cv2.VideoWriter('output/scored_vid.avi', fourcc, 10, (W, H), True)
+			writer = cv2.VideoWriter('/Users/I555250/PycharmProjects/olympicVAR/output/scored_vid.avi', fourcc, 10, (W, H), True)
 		# write the output frame to disk
 		writer.write(output)
 		# show the output image
-		cv2.imshow("Output", output)
-		key = cv2.waitKey(1) & 0xFF
-		# if the `q` key was pressed, break from the loop
-		if key == ord("q"):
-			break
+		# cv2.imshow("Output", output)
+		# key = cv2.waitKey(1) & 0xFF
+		# # if the `q` key was pressed, break from the loop
+		# if key == ord("q"):
+		# 	break
 	# release the file pointers
+	print(len(frames_scores))
+	return frames_scores
 	print("[INFO] cleaning up...")
 	writer.release()
 	vs.release()

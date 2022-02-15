@@ -1,6 +1,7 @@
 #import matplotlib
 #matplotlib.use("Agg")
 # import the necessary packages
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import AveragePooling2D
 from tensorflow.keras.applications import ResNet50
@@ -37,10 +38,26 @@ import os
 
 LABELS = set(["10", "9", "8", "7", "6", "5", "4", "3", "2"])
 
+# def correlation_coefficient(y_true, y_pred):
+#     pearson_r, update_op = tf.contrib.metrics.streaming_pearson_correlation(y_pred, y_true, name='pearson_r')
+#     # find all variables created for this metric
+#     metric_vars = [i for i in tf.local_variables() if 'pearson_r'  in i.name.split('/')]
+#
+#     # Add metric variables to GLOBAL_VARIABLES collection.
+#     # They will be initialized for new session.
+#     for v in metric_vars:
+#         tf.add_to_collection(tf.GraphKeys.GLOBAL_VARIABLES, v)
+#
+#     # force to update metric values
+#     with tf.control_dependencies([update_op]):
+#         pearson_r = tf.identity(pearson_r)
+#         return 1-pearson_r**2
+
+
 def train():
 	print("[INFO] loading images...")
 	#imagePaths = list(paths.list_images(args["dataset"]))
-	imagePaths = list(paths.list_images('/Users/I555250/PycharmProjects/newTry/data'))
+	imagePaths = list(paths.list_images('/Users/I555250/PycharmProjects/olympicVAR/data'))
 	data = []
 	labels = []
 	# loop over the image paths
@@ -108,8 +125,8 @@ def train():
 	print("[INFO] compiling model...")
 	#opt = SGD(lr=1e-4, momentum=0.9, decay=1e-4 / args["epochs"])
 	opt = SGD(lr=1e-4, momentum=0.9, decay=1e-4 / 5)
-	model.compile(loss="categorical_crossentropy", optimizer=opt,
-		metrics=["accuracy"])
+	#model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
+	model.compile(loss="mse", optimizer=opt, metrics=[tf.keras.metrics.CategoricalCrossentropy()])
 	# train the head of the network for a few epochs (all other layers
 	# are frozen) -- this will allow the new FC layers to start to become
 	# initialized with actual "learned" values versus pure random
@@ -126,7 +143,7 @@ def train():
 		steps_per_epoch=len(trainX) // 32,
 		validation_data=valAug.flow(testX, testY),
 		validation_steps=len(testX) // 32,
-		epochs=10)
+		epochs=5)
 
 	print("[INFO] evaluating network...")
 	predictions = model.predict(x=testX.astype("float32"), batch_size=32)
@@ -134,7 +151,7 @@ def train():
 		predictions.argmax(axis=1), target_names=lb.classes_))
 	# plot the training loss and accuracy
 	#N = args["epochs"]
-	N = 10
+	N = 5
 	plt.style.use("ggplot")
 	plt.figure()
 	plt.plot(np.arange(0, N), H.history["loss"], label="train_loss")

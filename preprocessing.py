@@ -3,7 +3,7 @@ from scipy.io import loadmat
 import pandas as pd
 
 def load_data():
-    annots_train = loadmat('split_4_test_list/split_4_train_list.mat')
+    annots_train = loadmat('/Users/I555250/PycharmProjects/olympicVAR/split_4_test_list/split_4_train_list.mat')
     arranged_train = [[element for element in upperElement] for upperElement in annots_train['consolidated_train_list']]
     new_data_train = list()
     for i in arranged_train:
@@ -12,7 +12,7 @@ def load_data():
     columns = ['class', 'video no.', 'score']
     data_train = pd.DataFrame(new_data_train, columns=columns)
 
-    annots_test = loadmat('split_4_test_list/split_4_test_list.mat')
+    annots_test = loadmat('/Users/I555250/PycharmProjects/olympicVAR/split_4_test_list/split_4_test_list.mat')
     arranged_test = [[element for element in upperElement] for upperElement in annots_test['consolidated_test_list']]
     new_data_test = list()
     for j in arranged_test:
@@ -39,12 +39,15 @@ def preprocessToClasses(dataFrame):
 def saveFrames(videos_dict):
 
     for index in videos_dict:
+        path = '/Users/I555250/PycharmProjects/olympicVAR/'
+        if index == 1:
+            continue
         if index < 10:
-            path = "diving/00" + str(index) + ".avi"
+            path += "diving/00" + str(index) + ".avi"
         elif index < 100:
-            path = "diving/0" + str(index) + ".avi"
+            path += "diving/0" + str(index) + ".avi"
         else:
-            path = "diving/" + str(index) + ".avi"
+            path += "diving/" + str(index) + ".avi"
 
         cap = cv2.VideoCapture(path)
         frames = []
@@ -54,6 +57,6 @@ def saveFrames(videos_dict):
             ret, img = cap.read()                                                                                       # read one frame from the 'capture' object; img is (H, W, C)
             if ret:
                 frames.append(img)
-                cv2.imwrite('/Users/I555250/PycharmProjects/newTry/data/' + str(videos_dict[index]) + '/vid' + str(index) + "frame" + str(j) + '.jpg', img)
+                cv2.imwrite('/Users/I555250/PycharmProjects/olympicVAR/data/' + str(videos_dict[index]) + '/vid' + str(index) + "frame" + str(j) + '.jpg', img)
                 j += 1
 

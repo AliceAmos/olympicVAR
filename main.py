@@ -5,6 +5,8 @@ from landmark import LandMark
 from trainingModel import train
 from predictVid import predict
 from preprocessing import load_data, preprocessToClasses, saveFrames
+import SomersaultsCounter
+from createData import *
 
 FRAMES_PER_VID = 103
 
@@ -54,11 +56,11 @@ def main():
     # dict = preprocessToClasses(load_data())
     # saveFrames(dict)
 
-    #try_test()
+    # drawTrainersSkeleton("/Users/I555250/PycharmProjects/olympicVAR/diving/009.avi")
     #train()
-    #drawTrainersSkeleton("new_vid_91.mp4")
-    #train()
-    predict()
+    # SomersaultsCounter.cutVid()
+    #print(load_data())
+    pred_vids()
 
 if __name__ == "__main__":
     main()
