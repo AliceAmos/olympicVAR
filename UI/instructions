@@ -1,0 +1,11 @@
+Just configure the IDE's run configuration to main.py script - all the commands are there on the right order.
+
+To change the video that it is predicting on - just change the url of it (passed as first parameter to predict() func.)
+
+To change the model that is predicting (not that you need to do so... not relevant for your development), just change the 'frames_predicton_model_path' variable.
+
+
+Requirements reminder:
+
+- Need to get the url of the video that was uploaded to CF by the user (which is me).
+- Need to be able to return that predicted score (that is calculated on main file) to the UI, to be shown on screen.

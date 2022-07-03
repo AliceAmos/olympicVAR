@@ -1,0 +1,6 @@
+creating folder command : virtualenv projectname
+
+activating virtualenv in PS or CMD : .\venv\Scripts\activate
+run server : py manage.py runserver
+
+admin username : afid pass: afidafid
