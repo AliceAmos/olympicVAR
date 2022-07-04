@@ -29,13 +29,9 @@ def AllVideos():
         loaded_model = pickle.load(open(loaded_model_path, 'rb'))
         frames_predicton_model_path = '/Users/I555250/mini_proj/backend/api/model/extended.model'
         full_url = str(value.get('video'))
-        #print(full_url)
-        new_vid_scores = predict('/Users/I555250/mini_proj/new_vid.mp4', frames_predicton_model_path)
+        new_vid_scores = predict(full_url, frames_predicton_model_path)
         new_vid_scores = new_vid_scores[:103]
-        new_vid_scores.insert(0, 9)
-        new_vid_scores.insert(1, 9)
         vid_df = pd.DataFrame(data=[new_vid_scores])
-        #print(vid_df)
         y_new_vid = loaded_model.predict(vid_df)
         print("Predicted score: ", y_new_vid)
         videoscore = VideoUpload.objects.filter(id=value.get('id')).update(score=str(float(y_new_vid[0])))
