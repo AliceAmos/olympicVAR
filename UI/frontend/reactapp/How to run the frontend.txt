@@ -1,5 +1,0 @@
-#Step-1
-  installing dependencies : npm install
-
-#Step-2
-  run the app : npm start
